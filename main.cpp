@@ -1,6 +1,6 @@
 #include <iostream>
 #include <math.h>
-#include <pthread.h>
+//#include <pthread.h>
 #include <fstream>
 #include <utility>
 #include <vector>
@@ -15,7 +15,7 @@ typedef struct {
     mpz_class max;
 } Range;
 
-pthread_mutex_t gGetMutex = PTHREAD_MUTEX_INITIALIZER;
+//pthread_mutex_t gGetMutex = PTHREAD_MUTEX_INITIALIZER;
 
 int gRangeCounter = 0;
 int gInRangeCounter = 0;
@@ -23,12 +23,12 @@ std::vector<Range> gRanges;
 
 bool getNextNumber(mpz_class& oNextNumber)
 {
-    pthread_mutex_lock(&gGetMutex);
+    //pthread_mutex_lock(&gGetMutex);
 
     while (true)
     {
         if (gRangeCounter >= gRanges.size()) {
-            pthread_mutex_unlock(&gGetMutex);
+            //pthread_mutex_unlock(&gGetMutex);
             return false;
         }
 
@@ -48,7 +48,7 @@ bool getNextNumber(mpz_class& oNextNumber)
         oNextNumber = lNextNumber;
         gInRangeCounter += 2;
 
-        pthread_mutex_unlock(&gGetMutex);
+        //pthread_mutex_unlock(&gGetMutex);
         return true;
     }
 }
@@ -131,7 +131,7 @@ std::vector<Range> collapseRangesOverlaps(std::vector<Range> iRanges)
     return lMergedRanges;
 }
 
-void testExecutionTimes(int iThreadAmount, const std::string& iFilename)
+/*void testExecutionTimes(int iThreadAmount, const std::string& iFilename)
 {
     auto lChrono = new Chrono();
 
@@ -178,7 +178,7 @@ void testExecutionTimes(int iThreadAmount, const std::string& iFilename)
     }
 
     lExecTimesFile.close();
-}
+}*/
 
 bool isPrime(const mpz_class& n)
 {
@@ -202,7 +202,12 @@ bool isPrime(const mpz_class& n)
 
 int main(int argc, char **argv) {
 
-    if (argc < 3) {
+    #pragma omp parallel for
+    for(int i=0;i<10;i++){
+        std::cout << i << std::endl;
+    }
+
+    /*if (argc < 3) {
         std::cout << "Please enter thread amount and filename !" << std::endl;
         return 0;
     }
@@ -269,16 +274,16 @@ int main(int argc, char **argv) {
     std::cout << "Found primes are:" << std::endl;
     for (const auto &item : oAllThreadFinds)
     {
-        /*if (!isPrime(item))
+        *//*if (!isPrime(item))
         {
             std::cout << std::endl;
             std::cout << item << " is not prime!";
             std::cout << std::endl;
             return 0;
-        }*/
+        }*//*
         std::cout << item << ", ";
     }
 
     std::cout << std::endl;
-    return 0;
+    return 0;*/
 }
